@@ -9,8 +9,12 @@ import androidx.navigation.navArgument
 import com.example.retro_savings_challenge.ui.ViewModelFactory
 import com.example.retro_savings_challenge.ui.onboarding.OnboardingScreen
 import com.example.retro_savings_challenge.ui.screens.ChallengeBrowserScreen
+import com.example.retro_savings_challenge.ui.screens.AddTransactionScreen
 import com.example.retro_savings_challenge.ui.screens.ChallengeDetailsScreen
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.retro_savings_challenge.ui.screens.DashboardScreen
+import com.example.retro_savings_challenge.ui.screens.DashboardViewModel
 
 @Composable
 fun AppNavHost(
@@ -25,10 +29,7 @@ fun AppNavHost(
                 onOnboardingFinished = {
                     onOnboardingFinished() // Mark onboarding as complete
                     navController.navigate(Routes.DASHBOARD) {
-                        // Pop up to the start destination of the graph to remove onboarding from back stack
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true
-                        }
+                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
                     }
                 }
             )
@@ -36,7 +37,8 @@ fun AppNavHost(
         composable(Routes.DASHBOARD) {
             DashboardScreen(
                 factory = viewModelFactory,
-                onNavigateToChallengeBrowser = { navController.navigate(Routes.CHALLENGE_BROWSER) }
+                onNavigateToChallengeBrowser = { navController.navigate(Routes.CHALLENGE_BROWSER) },
+                onNavigateToAddTransaction = { navController.navigate(Routes.ADD_TRANSACTION) }
             )
         }
         composable(Routes.CHALLENGE_BROWSER) {
@@ -55,6 +57,12 @@ fun AppNavHost(
             if (challengeId != null) {
                 ChallengeDetailsScreen(challengeId = challengeId, factory = viewModelFactory)
             }
+        }
+        composable(Routes.ADD_TRANSACTION) {
+            AddTransactionScreen(
+                factory = viewModelFactory,
+                onSaveComplete = { navController.popBackStack() }
+            )
         }
     }
 }

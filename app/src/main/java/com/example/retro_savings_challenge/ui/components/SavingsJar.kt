@@ -25,8 +25,10 @@ import androidx.compose.ui.unit.dp
 import com.example.retro_savings_challenge.R
 import com.example.retro_savings_challenge.ui.theme.RetroSavingsChallengeTheme
 
+import java.text.NumberFormat
+
 @Composable
-fun SavingsJar(modifier: Modifier = Modifier) {
+fun SavingsJar(modifier: Modifier = Modifier, totalSavings: Float) {
     Surface(
         modifier = modifier.width(200.dp).height(250.dp),
         shape = RoundedCornerShape(topStart = 80.dp, topEnd = 80.dp, bottomStart = 20.dp, bottomEnd = 20.dp),
@@ -68,7 +70,7 @@ fun SavingsJar(modifier: Modifier = Modifier) {
 
             // Jar Label
             Text(
-                text = "$12.34",
+                text = NumberFormat.getCurrencyInstance().format(totalSavings),
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -81,7 +83,7 @@ fun SavingsJar(modifier: Modifier = Modifier) {
 fun SavingsJarPreview() {
     RetroSavingsChallengeTheme(darkTheme = true) {
         Box(modifier = Modifier.padding(16.dp)) {
-            SavingsJar()
+            SavingsJar(totalSavings = 12.34f)
         }
     }
 }

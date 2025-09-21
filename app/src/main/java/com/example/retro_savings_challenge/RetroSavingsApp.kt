@@ -13,7 +13,13 @@ class RetroSavingsApp : Application() {
     // Using by lazy so the database and repository are only created when they're needed
     // for the first time.
     val database by lazy { AppDatabase.getDatabase(this) }
-    val dashboardRepository by lazy { DashboardRepository(database.challengeDao()) }
+    val dashboardRepository by lazy {
+        DashboardRepository(
+            database.challengeDao(),
+            database.participationDao(),
+            database.transactionDao()
+        )
+    }
 
     override fun onCreate() {
         super.onCreate()

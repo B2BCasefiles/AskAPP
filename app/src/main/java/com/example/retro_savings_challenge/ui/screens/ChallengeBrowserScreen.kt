@@ -31,7 +31,10 @@ fun ChallengeBrowserScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(challenges) { challenge ->
-                ChallengeCard(challenge = challenge)
+                ChallengeCard(
+                    challenge = challenge,
+                    onClick = { onNavigateToDetails(challenge.id) }
+                )
             }
         }
     }

@@ -16,30 +16,53 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.retro_savings_challenge.ui.ViewModelFactory
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.Button
+import androidx.compose.runtime.LaunchedEffect
+
 @Composable
 fun ChallengeDetailsScreen(
     challengeId: String,
     factory: ViewModelFactory
 ) {
     val viewModel: ChallengeViewModel = viewModel(factory = factory)
-    val challengeState by viewModel.getChallenge(challengeId).collectAsState()
+    // Load the details for the specific challenge when the screen is composed
+    LaunchedEffect(challengeId) {
+        viewModel.loadChallengeDetails(challengeId)
+    }
+    val uiState by viewModel.detailsState.collectAsState()
 
-    Column(modifier = Modifier
+    Box(modifier = Modifier
         .fillMaxSize()
         .padding(16.dp)) {
 
-        challengeState?.let { challenge ->
-            Text(text = challenge.title, style = MaterialTheme.typography.headlineMedium)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Rules: ${challenge.rules}", style = MaterialTheme.typography.bodyLarge)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Reward: ${challenge.reward}", style = MaterialTheme.typography.bodyLarge)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Frequency: ${challenge.frequency}", style = MaterialTheme.typography.bodyLarge)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Goal: $${challenge.goalAmount}", style = MaterialTheme.typography.bodyLarge)
-        } ?: run {
-            CircularProgressIndicator()
+        if (uiState.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else {
+            uiState.challenge?.let { challenge ->
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text(text = challenge.title, style = MaterialTheme.typography.headlineMedium)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = "Rules: ${challenge.rules}", style = MaterialTheme.typography.bodyLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Reward: ${challenge.reward}", style = MaterialTheme.typography.bodyLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Frequency: ${challenge.frequency}", style = MaterialTheme.typography.bodyLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(text = "Goal: $${challenge.goalAmount}", style = MaterialTheme.typography.bodyLarge)
+
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Button(
+                        onClick = { viewModel.toggleParticipation(challenge.id) },
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(if (uiState.isJoined) "Leave Challenge" else "Join Challenge")
+                    }
+                }
+            } ?: run {
+                Text("Challenge not found.", modifier = Modifier.align(Alignment.Center))
+            }
         }
     }
 }

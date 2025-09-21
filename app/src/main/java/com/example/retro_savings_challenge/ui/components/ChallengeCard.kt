@@ -17,10 +17,18 @@ import androidx.compose.ui.unit.dp
 import com.example.retro_savings_challenge.data.model.Challenge
 import com.example.retro_savings_challenge.ui.theme.RetroSavingsChallengeTheme
 
+import androidx.compose.foundation.clickable
+
 @Composable
-fun ChallengeCard(challenge: Challenge, modifier: Modifier = Modifier) {
+fun ChallengeCard(
+    challenge: Challenge,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -47,7 +55,8 @@ fun ChallengeCardPreview() {
                 frequency = "Weekly",
                 goalAmount = 1378.0
             ),
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
+            onClick = {}
         )
     }
 }
