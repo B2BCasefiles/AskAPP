@@ -1,5 +1,6 @@
 package com.example.retro_savings_challenge.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,8 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.retro_savings_challenge.data.model.Challenge
 import com.example.retro_savings_challenge.ui.theme.RetroSavingsChallengeTheme
-
-import androidx.compose.foundation.clickable
 
 @Composable
 fun ChallengeCard(

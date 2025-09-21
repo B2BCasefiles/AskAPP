@@ -21,6 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.retro_savings_challenge.DeviceProfile
+import com.example.retro_savings_challenge.data.repository.DashboardRepository
+import com.example.retro_savings_challenge.ui.ViewModelFactory
 import com.example.retro_savings_challenge.ui.theme.RetroSavingsChallengeTheme
 
 @Composable
@@ -67,13 +71,13 @@ fun AddTransactionScreen(
 @Composable
 fun AddTransactionScreenPreview() {
     RetroSavingsChallengeTheme {
-        // This preview is not ideal as it needs a real ViewModel.
-        // For a real project, we would create a fake ViewModel for previews.
+        // This preview requires a fake factory and DAOs
+        val fakeFactory = ViewModelFactory(
+            DashboardRepository(FakeChallengeDao(), FakeParticipationDao(), FakeTransactionDao()),
+            DeviceProfile.MEDIUM
+        )
         AddTransactionScreen(
-            factory = ViewModelFactory(
-                DashboardRepository(FakeChallengeDao(), FakeParticipationDao(), FakeTransactionDao()),
-                DeviceProfile.MEDIUM
-            ),
+            factory = fakeFactory,
             onSaveComplete = {}
         )
     }

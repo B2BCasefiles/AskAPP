@@ -1,4 +1,4 @@
-package com.example.retro_savings_challenge
+package com.example.retro_savings_challenge.ui.components
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.retro_savings_challenge.DeviceProfile
+import com.example.retro_savings_challenge.R
 
 @Composable
 fun AdaptiveProgressRing(

@@ -48,7 +48,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -69,12 +68,11 @@ dependencies {
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.activity:activity-ktx:1.9.0")
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
-
-    // Activity KTX for by viewModels() delegate
-    implementation("androidx.activity:activity-ktx:1.9.0")
+    implementation("androidx.compose.animation:animation-shared-transition:1.0.0-alpha07")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

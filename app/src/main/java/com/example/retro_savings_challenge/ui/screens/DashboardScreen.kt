@@ -22,10 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.retro_savings_challenge.AdaptiveProgressRing
 import com.example.retro_savings_challenge.DeviceProfile
 import com.example.retro_savings_challenge.data.model.Challenge
 import com.example.retro_savings_challenge.ui.ViewModelFactory
+import androidx.compose.foundation.layout.Box
+import com.example.retro_savings_challenge.core.animation.ParticleSystem
+import com.example.retro_savings_challenge.ui.components.AdaptiveProgressRing
 import com.example.retro_savings_challenge.ui.components.SavingsJar
 import com.example.retro_savings_challenge.ui.theme.RetroSavingsChallengeTheme
 
@@ -37,11 +39,15 @@ fun DashboardScreen(
 ) {
     val viewModel: DashboardViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsState()
-    DashboardContent(
-        uiState = uiState,
-        onNavigateToChallengeBrowser = onNavigateToChallengeBrowser,
-        onNavigateToAddTransaction = onNavigateToAddTransaction
-    )
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        DashboardContent(
+            uiState = uiState,
+            onNavigateToChallengeBrowser = onNavigateToChallengeBrowser,
+            onNavigateToAddTransaction = onNavigateToAddTransaction
+        )
+        ParticleSystem(manager = viewModel.particleManager)
+    }
 }
 
 @Composable

@@ -1,13 +1,12 @@
 package com.example.retro_savings_challenge.data.repository
 
 import com.example.retro_savings_challenge.data.local.ChallengeDao
-import com.example.retro_savings_challenge.data.model.Challenge
-import kotlinx.coroutines.flow.Flow
-
 import com.example.retro_savings_challenge.data.local.ParticipationDao
 import com.example.retro_savings_challenge.data.local.TransactionDao
+import com.example.retro_savings_challenge.data.model.Challenge
 import com.example.retro_savings_challenge.data.model.Participation
 import com.example.retro_savings_challenge.data.model.Transaction
+import kotlinx.coroutines.flow.Flow
 
 class DashboardRepository(
     private val challengeDao: ChallengeDao,

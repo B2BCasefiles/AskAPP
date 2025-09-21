@@ -1,29 +1,35 @@
 package com.example.retro_savings_challenge.ui.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.retro_savings_challenge.ui.ViewModelFactory
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.material3.Button
-import androidx.compose.runtime.LaunchedEffect
-
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ChallengeDetailsScreen(
     challengeId: String,
-    factory: ViewModelFactory
+    factory: ViewModelFactory,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val viewModel: ChallengeViewModel = viewModel(factory = factory)
     // Load the details for the specific challenge when the screen is composed
@@ -40,7 +46,14 @@ fun ChallengeDetailsScreen(
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
             uiState.challenge?.let { challenge ->
-                Column(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = with(sharedTransitionScope) {
+                    Modifier
+                        .fillMaxSize()
+                        .sharedElement(
+                            rememberSharedContentState(key = "card-${challenge.id}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                }) {
                     Text(text = challenge.title, style = MaterialTheme.typography.headlineMedium)
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(text = "Rules: ${challenge.rules}", style = MaterialTheme.typography.bodyLarge)

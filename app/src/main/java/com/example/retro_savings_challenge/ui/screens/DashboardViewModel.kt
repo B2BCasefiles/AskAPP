@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.retro_savings_challenge.DeviceProfile
 import com.example.retro_savings_challenge.core.Constants
 import com.example.retro_savings_challenge.data.model.Challenge
+import com.example.retro_savings_challenge.core.animation.ParticleManager
 import com.example.retro_savings_challenge.data.model.Transaction
 import com.example.retro_savings_challenge.data.repository.DashboardRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,6 +19,8 @@ class DashboardViewModel(
     private val repository: DashboardRepository,
     private val deviceProfile: DeviceProfile
 ) : ViewModel() {
+
+    val particleManager = ParticleManager()
 
     val uiState: StateFlow<DashboardUiState> = combine(
         repository.getActiveChallenges(),
@@ -48,6 +51,8 @@ class DashboardViewModel(
                 type = "manual"
             )
             repository.saveTransaction(transaction)
+            // Trigger a particle explosion from the center of the screen
+            particleManager.emit(540f, 1200f, 50)
         }
     }
 }
@@ -57,5 +62,5 @@ data class DashboardUiState(
     val currentProgress: Float = 0f,
     val totalSavings: Float = 0f,
     val isLoading: Boolean = false,
-    val deviceProfile: DeviceProfile = DeviceProfile.MEDIUM // Default value
+    val deviceProfile: DeviceProfile = DeviceProfile.MEDIUM
 )

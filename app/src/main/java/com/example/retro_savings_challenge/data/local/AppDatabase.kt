@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.retro_savings_challenge.data.model.Challenge
 import com.example.retro_savings_challenge.data.model.Participation
 import com.example.retro_savings_challenge.data.model.Transaction
-
-import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,30 +51,9 @@ abstract class AppDatabase : RoomDatabase() {
 
         suspend fun populateDatabase(challengeDao: ChallengeDao) {
             val challenges = listOf(
-                Challenge(
-                    id = "1",
-                    title = "52-Week Savings Challenge",
-                    rules = "Save an increasing amount each week, starting with $1.",
-                    reward = "A cool badge!",
-                    frequency = "Weekly",
-                    goalAmount = 1378.0
-                ),
-                Challenge(
-                    id = "2",
-                    title = "Round-Up Challenge",
-                    rules = "Round up your daily purchases to the nearest dollar and save the change.",
-                    reward = "Unlock a new theme!",
-                    frequency = "Daily",
-                    goalAmount = 100.0
-                ),
-                Challenge(
-                    id = "3",
-                    title = "No-Spend Weekend",
-                    rules = "Try not to spend any money for an entire weekend.",
-                    reward = "Bonus Points!",
-                    frequency = "Monthly",
-                    goalAmount = 0.0
-                )
+                Challenge("1", "52-Week Savings Challenge", "Save an increasing amount each week, starting with $1.", "A cool badge!", "Weekly", 1378.0),
+                Challenge("2", "Round-Up Challenge", "Round up your daily purchases to the nearest dollar and save the change.", "Unlock a new theme!", "Daily", 100.0),
+                Challenge("3", "No-Spend Weekend", "Try not to spend any money for an entire weekend.", "Bonus Points!", "Monthly", 0.0)
             )
             challengeDao.insertAll(challenges)
         }

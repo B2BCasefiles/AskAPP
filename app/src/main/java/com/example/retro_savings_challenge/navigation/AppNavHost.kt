@@ -1,33 +1,35 @@
 package com.example.retro_savings_challenge.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.retro_savings_challenge.ui.ViewModelFactory
 import com.example.retro_savings_challenge.ui.onboarding.OnboardingScreen
-import com.example.retro_savings_challenge.ui.screens.ChallengeBrowserScreen
 import com.example.retro_savings_challenge.ui.screens.AddTransactionScreen
+import com.example.retro_savings_challenge.ui.screens.ChallengeBrowserScreen
 import com.example.retro_savings_challenge.ui.screens.ChallengeDetailsScreen
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.retro_savings_challenge.ui.screens.DashboardScreen
-import com.example.retro_savings_challenge.ui.screens.DashboardViewModel
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     startDestination: String,
     viewModelFactory: ViewModelFactory,
-    onOnboardingFinished: () -> Unit
+    onOnboardingFinished: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable(Routes.ONBOARDING) {
             OnboardingScreen(
                 onOnboardingFinished = {
-                    onOnboardingFinished() // Mark onboarding as complete
+                    onOnboardingFinished()
                     navController.navigate(Routes.DASHBOARD) {
                         popUpTo(navController.graph.startDestinationId) { inclusive = true }
                     }
@@ -46,7 +48,9 @@ fun AppNavHost(
                 factory = viewModelFactory,
                 onNavigateToDetails = { challengeId ->
                     navController.navigate(Routes.challengeDetails(challengeId))
-                }
+                },
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = this
             )
         }
         composable(
@@ -55,7 +59,12 @@ fun AppNavHost(
         ) { backStackEntry ->
             val challengeId = backStackEntry.arguments?.getString("challengeId")
             if (challengeId != null) {
-                ChallengeDetailsScreen(challengeId = challengeId, factory = viewModelFactory)
+                ChallengeDetailsScreen(
+                    challengeId = challengeId,
+                    factory = viewModelFactory,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = this
+                )
             }
         }
         composable(Routes.ADD_TRANSACTION) {

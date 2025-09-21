@@ -31,51 +31,45 @@ fun OnboardingScreen(onOnboardingFinished: () -> Unit) {
             modifier = Modifier.weight(1f)
         ) { page ->
             when (page) {
-                0 -> OnboardingPage1()
-                1 -> OnboardingPage2()
-                2 -> OnboardingPage3(onOnboardingFinished)
+                0 -> OnboardingPage(
+                    title = "Welcome to Retro Savings!",
+                    text = "Turn your spare change into a fun, retro-themed challenge."
+                )
+                1 -> OnboardingPage(
+                    title = "How It Works",
+                    text = "Link a funding source or round up purchases. Watch your savings grow with cool animations!"
+                )
+                2 -> OnboardingPage(
+                    title = "Ready to Start?",
+                    text = "Let's begin your first challenge.",
+                    buttonText = "Let's Go!",
+                    onButtonClick = onOnboardingFinished
+                )
             }
         }
     }
 }
 
 @Composable
-fun OnboardingPage1() {
+fun OnboardingPage(
+    title: String,
+    text: String,
+    buttonText: String? = null,
+    onButtonClick: (() -> Unit)? = null
+) {
     Column(
         modifier = Modifier.fillMaxSize().padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Welcome to Retro Savings!", style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center)
+        Text(text = title, style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
-        Text("Turn your spare change into a fun, retro-themed challenge.", textAlign = TextAlign.Center)
-    }
-}
-
-@Composable
-fun OnboardingPage2() {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("How It Works", style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(16.dp))
-        Text("Link a funding source or round up purchases. Watch your savings grow with cool animations!", textAlign = TextAlign.Center)
-    }
-}
-
-@Composable
-fun OnboardingPage3(onOnboardingFinished: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Ready to Start?", style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(32.dp))
-        Button(onClick = onOnboardingFinished) {
-            Text("Let's Go!")
+        Text(text = text, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
+        if (buttonText != null && onButtonClick != null) {
+            Spacer(Modifier.height(32.dp))
+            Button(onClick = onButtonClick) {
+                Text(buttonText)
+            }
         }
     }
 }

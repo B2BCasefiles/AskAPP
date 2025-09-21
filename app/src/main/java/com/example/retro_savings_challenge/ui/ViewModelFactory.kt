@@ -2,12 +2,10 @@ package com.example.retro_savings_challenge.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.retro_savings_challenge.data.repository.DashboardRepository
-import com.example.retro_savings_challenge.ui.screens.DashboardViewModel
-
 import com.example.retro_savings_challenge.DeviceProfile
-
+import com.example.retro_savings_challenge.data.repository.DashboardRepository
 import com.example.retro_savings_challenge.ui.screens.ChallengeViewModel
+import com.example.retro_savings_challenge.ui.screens.DashboardViewModel
 
 class ViewModelFactory(
     private val repository: DashboardRepository,
