@@ -16,9 +16,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.retro_savings_challenge.ui.theme.RetroSavingsChallengeTheme
+import com.example.retro_savings_challenge.ui.theme.NeonCyan
+import com.example.retro_savings_challenge.ui.theme.NeonMagenta
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -31,14 +40,8 @@ fun OnboardingScreen(onOnboardingFinished: () -> Unit) {
             modifier = Modifier.weight(1f)
         ) { page ->
             when (page) {
-                0 -> OnboardingPage(
-                    title = "Welcome to Retro Savings!",
-                    text = "Turn your spare change into a fun, retro-themed challenge."
-                )
-                1 -> OnboardingPage(
-                    title = "How It Works",
-                    text = "Link a funding source or round up purchases. Watch your savings grow with cool animations!"
-                )
+                0 -> OnboardingPage1Animated(pagerState)
+                1 -> OnboardingPage2Animated()
                 2 -> OnboardingPage(
                     title = "Ready to Start?",
                     text = "Let's begin your first challenge.",
@@ -47,6 +50,53 @@ fun OnboardingScreen(onOnboardingFinished: () -> Unit) {
                 )
             }
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun OnboardingPage1Animated(pagerState: PagerState) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .graphicsLayer {
+                val pageOffset = pagerState.currentPageOffsetFraction
+                translationX = pageOffset * size.width * 0.5f
+            }
+            .background(NeonMagenta.copy(alpha = 0.3f))
+        )
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .graphicsLayer {
+                val pageOffset = pagerState.currentPageOffsetFraction
+                translationX = pageOffset * size.width * 0.7f
+            }
+            .background(NeonCyan.copy(alpha = 0.3f))
+        )
+        OnboardingPage(
+            title = "Welcome to Retro Savings!",
+            text = "Turn your spare change into a fun, retro-themed challenge."
+        )
+    }
+}
+
+@Composable
+fun OnboardingPage2Animated() {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("How It Works", style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center)
+        Spacer(Modifier.height(16.dp))
+        val composition by rememberLottieComposition(LottieCompositionSpec.Asset("how_it_works.json"))
+        LottieAnimation(
+            composition = composition,
+            iterations = Int.MAX_VALUE,
+            modifier = Modifier.height(200.dp)
+        )
+        Spacer(Modifier.height(16.dp))
+        Text("Link a funding source or round up purchases. Watch your savings grow with cool animations!", textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
     }
 }
 

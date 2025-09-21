@@ -22,6 +22,7 @@ class DashboardViewModel(
 ) : ViewModel() {
 
     val particleManager = ParticleManager()
+    private var lastKnownSavings = 0f
 
     val uiState: StateFlow<DashboardUiState> = combine(
         repository.getActiveChallenges(),
@@ -42,11 +43,15 @@ class DashboardViewModel(
         initialValue = DashboardUiState(isLoading = true, deviceProfile = deviceProfile)
     )
 
-    fun triggerParticleEffect(offset: Offset) {
-        particleManager.emit(offset.x, offset.y, 50)
+    fun onSavingsChanged(newSavings: Float, jarPosition: Offset) {
+        if (newSavings > lastKnownSavings) {
+            // Savings have increased, trigger the particle effect
+            particleManager.emit(jarPosition.x, jarPosition.y, 50)
+        }
+        lastKnownSavings = newSavings
     }
 
-    fun saveTransaction(amount: Double, emissionPosition: Offset) {
+    fun saveTransaction(amount: Double) {
         viewModelScope.launch {
             val transaction = Transaction(
                 id = UUID.randomUUID().toString(),
@@ -56,7 +61,6 @@ class DashboardViewModel(
                 type = "manual"
             )
             repository.saveTransaction(transaction)
-            triggerParticleEffect(emissionPosition)
         }
     }
 }

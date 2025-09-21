@@ -26,6 +26,10 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.retro_savings_challenge.DeviceProfile
 import com.example.retro_savings_challenge.R
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+
 @Composable
 fun AdaptiveProgressRing(
     progress: Float, // 0f..1f
@@ -36,6 +40,14 @@ fun AdaptiveProgressRing(
         animationSpec = if (deviceProfile == DeviceProfile.LOW) tween(300) else spring(dampingRatio = Spring.DampingRatioMediumBouncy),
         label = "Progress Animation"
     )
+    val strokeWidthMultiplier = remember { Animatable(1f) }
+
+    LaunchedEffect(progress) {
+        if (deviceProfile != DeviceProfile.LOW) {
+            strokeWidthMultiplier.snapTo(1.5f)
+            strokeWidthMultiplier.animateTo(1f, animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = 300f))
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -47,7 +59,8 @@ fun AdaptiveProgressRing(
             }
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val stroke = Stroke(width = size.minDimension * 0.12f, cap = StrokeCap.Round)
+            val baseStrokeWidth = size.minDimension * 0.12f
+            val stroke = Stroke(width = baseStrokeWidth * strokeWidthMultiplier.value, cap = StrokeCap.Round)
             // background ring
             drawArc(
                 color = Color(0xFF2B2B2B),

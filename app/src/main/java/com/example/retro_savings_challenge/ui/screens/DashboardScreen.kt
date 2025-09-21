@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,8 +51,8 @@ fun DashboardScreen(
             uiState = uiState,
             onNavigateToChallengeBrowser = onNavigateToChallengeBrowser,
             onNavigateToAddTransaction = onNavigateToAddTransaction,
-            onAnimate = { position ->
-                viewModel.triggerParticleEffect(position)
+            onSavingsChanged = { savings, position ->
+                viewModel.onSavingsChanged(savings, position)
             }
         )
         ParticleSystem(manager = viewModel.particleManager)
@@ -63,9 +64,16 @@ fun DashboardContent(
     uiState: DashboardUiState,
     onNavigateToChallengeBrowser: () -> Unit,
     onNavigateToAddTransaction: () -> Unit,
-    onAnimate: (Offset) -> Unit
+    onSavingsChanged: (Float, Offset) -> Unit
 ) {
     var jarPosition by remember { mutableStateOf(Offset.Zero) }
+
+    // This effect will run whenever totalSavings changes
+    LaunchedEffect(uiState.totalSavings) {
+        if (jarPosition != Offset.Zero) {
+            onSavingsChanged(uiState.totalSavings, jarPosition)
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -116,10 +124,6 @@ fun DashboardContent(
                     Text("Add Transaction")
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { onAnimate(jarPosition) }) {
-                Text("Test Animation")
-            }
         }
     }
 }
@@ -140,7 +144,7 @@ fun DashboardScreenPreview() {
             uiState = previewState,
             onNavigateToChallengeBrowser = {},
             onNavigateToAddTransaction = {},
-            onAnimate = {}
+            onSavingsChanged = { _,_ -> }
         )
     }
 }
