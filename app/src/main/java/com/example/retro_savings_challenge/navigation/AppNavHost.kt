@@ -15,6 +15,7 @@ import com.example.retro_savings_challenge.ui.screens.AddTransactionScreen
 import com.example.retro_savings_challenge.ui.screens.ChallengeBrowserScreen
 import com.example.retro_savings_challenge.ui.screens.ChallengeDetailsScreen
 import com.example.retro_savings_challenge.ui.screens.DashboardScreen
+import com.example.retro_savings_challenge.ui.screens.RewardsScreen
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -40,7 +41,8 @@ fun AppNavHost(
             DashboardScreen(
                 factory = viewModelFactory,
                 onNavigateToChallengeBrowser = { navController.navigate(Routes.CHALLENGE_BROWSER) },
-                onNavigateToAddTransaction = { navController.navigate(Routes.ADD_TRANSACTION) }
+                onNavigateToAddTransaction = { navController.navigate(Routes.ADD_TRANSACTION) },
+                onNavigateToRewards = { navController.navigate(Routes.REWARDS) }
             )
         }
         composable(Routes.CHALLENGE_BROWSER) {
@@ -72,6 +74,9 @@ fun AppNavHost(
                 factory = viewModelFactory,
                 onSaveComplete = { navController.popBackStack() }
             )
+        }
+        composable(Routes.REWARDS) {
+            RewardsScreen()
         }
     }
 }

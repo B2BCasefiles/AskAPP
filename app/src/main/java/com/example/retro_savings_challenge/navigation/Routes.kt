@@ -6,6 +6,7 @@ object Routes {
     const val CHALLENGE_BROWSER = "challenge_browser"
     const val CHALLENGE_DETAILS = "challenge_details/{challengeId}"
     const val ADD_TRANSACTION = "add_transaction"
+    const val REWARDS = "rewards"
 
     fun challengeDetails(challengeId: String) = "challenge_details/$challengeId"
 }

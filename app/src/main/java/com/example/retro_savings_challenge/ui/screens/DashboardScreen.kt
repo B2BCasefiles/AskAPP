@@ -41,19 +41,27 @@ import com.example.retro_savings_challenge.ui.theme.RetroSavingsChallengeTheme
 fun DashboardScreen(
     factory: ViewModelFactory,
     onNavigateToChallengeBrowser: () -> Unit,
-    onNavigateToAddTransaction: () -> Unit
+    onNavigateToAddTransaction: () -> Unit,
+    onNavigateToRewards: () -> Unit
 ) {
     val viewModel: DashboardViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsState()
+    var jarPosition by remember { mutableStateOf(Offset.Zero) }
+
+    // This effect will run whenever totalSavings changes
+    LaunchedEffect(uiState.totalSavings) {
+        if (jarPosition != Offset.Zero) {
+            viewModel.onSavingsChanged(uiState.totalSavings, jarPosition)
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         DashboardContent(
             uiState = uiState,
             onNavigateToChallengeBrowser = onNavigateToChallengeBrowser,
             onNavigateToAddTransaction = onNavigateToAddTransaction,
-            onSavingsChanged = { savings, position ->
-                viewModel.onSavingsChanged(savings, position)
-            }
+            onNavigateToRewards = onNavigateToRewards,
+            onJarPositioned = { jarPosition = it }
         )
         ParticleSystem(manager = viewModel.particleManager)
     }
@@ -64,17 +72,9 @@ fun DashboardContent(
     uiState: DashboardUiState,
     onNavigateToChallengeBrowser: () -> Unit,
     onNavigateToAddTransaction: () -> Unit,
-    onSavingsChanged: (Float, Offset) -> Unit
+    onNavigateToRewards: () -> Unit,
+    onJarPositioned: (Offset) -> Unit
 ) {
-    var jarPosition by remember { mutableStateOf(Offset.Zero) }
-
-    // This effect will run whenever totalSavings changes
-    LaunchedEffect(uiState.totalSavings) {
-        if (jarPosition != Offset.Zero) {
-            onSavingsChanged(uiState.totalSavings, jarPosition)
-        }
-    }
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -94,10 +94,11 @@ fun DashboardContent(
                 totalSavings = uiState.totalSavings,
                 modifier = Modifier.onGloballyPositioned {
                     val rootPosition = it.positionInRoot()
-                    jarPosition = Offset(
+                    val center = Offset(
                         rootPosition.x + (it.size.width / 2),
                         rootPosition.y + (it.size.height / 2)
                     )
+                    onJarPositioned(center)
                 }
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -118,10 +119,13 @@ fun DashboardContent(
             Spacer(modifier = Modifier.height(16.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                 Button(onClick = onNavigateToChallengeBrowser) {
-                    Text("Browse Challenges")
+                    Text("Challenges")
                 }
                 Button(onClick = onNavigateToAddTransaction) {
-                    Text("Add Transaction")
+                    Text("Add Funds")
+                }
+                Button(onClick = onNavigateToRewards) {
+                    Text("Rewards")
                 }
             }
         }
@@ -144,7 +148,8 @@ fun DashboardScreenPreview() {
             uiState = previewState,
             onNavigateToChallengeBrowser = {},
             onNavigateToAddTransaction = {},
-            onSavingsChanged = { _,_ -> }
+            onNavigateToRewards = {},
+            onJarPositioned = {}
         )
     }
 }

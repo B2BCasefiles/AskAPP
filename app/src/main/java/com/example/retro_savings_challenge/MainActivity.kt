@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val application = application as RetroSavingsApp
         val viewModelFactory = ViewModelFactory(
-            application.dashboardRepository,
             application.deviceProfile
         )
         val onboardingManager = OnboardingManager(this)
