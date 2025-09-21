@@ -1,11 +1,12 @@
 package com.example.retro_savings_challenge.ui.screens
 
+import androidx.compose.ui.geometry.Offset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.retro_savings_challenge.DeviceProfile
 import com.example.retro_savings_challenge.core.Constants
-import com.example.retro_savings_challenge.data.model.Challenge
 import com.example.retro_savings_challenge.core.animation.ParticleManager
+import com.example.retro_savings_challenge.data.model.Challenge
 import com.example.retro_savings_challenge.data.model.Transaction
 import com.example.retro_savings_challenge.data.repository.DashboardRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,7 +42,11 @@ class DashboardViewModel(
         initialValue = DashboardUiState(isLoading = true, deviceProfile = deviceProfile)
     )
 
-    fun saveTransaction(amount: Double) {
+    fun triggerParticleEffect(offset: Offset) {
+        particleManager.emit(offset.x, offset.y, 50)
+    }
+
+    fun saveTransaction(amount: Double, emissionPosition: Offset) {
         viewModelScope.launch {
             val transaction = Transaction(
                 id = UUID.randomUUID().toString(),
@@ -51,8 +56,7 @@ class DashboardViewModel(
                 type = "manual"
             )
             repository.saveTransaction(transaction)
-            // Trigger a particle explosion from the center of the screen
-            particleManager.emit(540f, 1200f, 50)
+            triggerParticleEffect(emissionPosition)
         }
     }
 }
