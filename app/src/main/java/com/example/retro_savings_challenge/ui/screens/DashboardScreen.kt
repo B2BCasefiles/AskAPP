@@ -29,15 +29,17 @@ import com.example.retro_savings_challenge.ui.ViewModelFactory
 
 import com.example.retro_savings_challenge.data.model.Challenge
 
+import androidx.compose.material3.Button
+
 @Composable
-fun DashboardScreen(factory: ViewModelFactory) {
+fun DashboardScreen(factory: ViewModelFactory, onNavigateToChallengeBrowser: () -> Unit) {
     val viewModel: DashboardViewModel = viewModel(factory = factory)
     val uiState by viewModel.uiState.collectAsState()
-    DashboardContent(uiState = uiState)
+    DashboardContent(uiState = uiState, onNavigateToChallengeBrowser = onNavigateToChallengeBrowser)
 }
 
 @Composable
-fun DashboardContent(uiState: DashboardUiState) {
+fun DashboardContent(uiState: DashboardUiState, onNavigateToChallengeBrowser: () -> Unit) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -61,13 +63,16 @@ fun DashboardContent(uiState: DashboardUiState) {
                 Text("Loading challenges...")
             } else {
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(uiState.challenges) { challenge ->
                         Text(text = challenge.title)
                     }
                 }
+            }
+            Button(onClick = onNavigateToChallengeBrowser) {
+                Text("Browse All Challenges")
             }
         }
     }
@@ -84,6 +89,6 @@ fun DashboardScreenPreview() {
             ),
             currentProgress = 0.6f
         )
-        DashboardContent(uiState = previewState)
+        DashboardContent(uiState = previewState, onNavigateToChallengeBrowser = {})
     }
 }

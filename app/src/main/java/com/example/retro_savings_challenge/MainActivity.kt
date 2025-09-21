@@ -13,6 +13,11 @@ import com.example.retro_savings_challenge.ui.theme.RetroSavingsChallengeTheme
 
 import com.example.retro_savings_challenge.ui.ViewModelFactory
 
+import androidx.navigation.compose.rememberNavController
+import com.example.retro_savings_challenge.data.preferences.OnboardingManager
+import com.example.retro_savings_challenge.navigation.AppNavHost
+import com.example.retro_savings_challenge.navigation.Routes
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,12 +26,26 @@ class MainActivity : ComponentActivity() {
             application.dashboardRepository,
             application.deviceProfile
         )
+        val onboardingManager = OnboardingManager(this)
 
         setContent {
             RetroSavingsChallengeTheme(darkTheme = true) {
-                // A surface container using the 'background' color from the theme
+                val navController = rememberNavController()
+                val startDestination = if (onboardingManager.hasCompletedOnboarding) {
+                    Routes.DASHBOARD
+                } else {
+                    Routes.ONBOARDING
+                }
+
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    DashboardScreen(factory = viewModelFactory)
+                    AppNavHost(
+                        navController = navController,
+                        startDestination = startDestination,
+                        viewModelFactory = viewModelFactory,
+                        onOnboardingFinished = {
+                            onboardingManager.hasCompletedOnboarding = true
+                        }
+                    )
                 }
             }
         }
@@ -37,6 +56,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     RetroSavingsChallengeTheme(darkTheme = true) {
-        DashboardScreen()
+        // Previewing the whole nav host is complex.
+        // It's better to preview individual screens.
+        // This preview can be removed or adapted if needed.
+        Text("App Preview (See Screen Previews)", color = Color.White)
     }
 }

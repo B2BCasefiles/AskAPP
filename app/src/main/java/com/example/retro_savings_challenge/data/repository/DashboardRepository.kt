@@ -5,7 +5,7 @@ import com.example.retro_savings_challenge.data.model.Challenge
 import kotlinx.coroutines.flow.Flow
 
 class DashboardRepository(private val challengeDao: ChallengeDao) {
-    fun getActiveChallenges(): Flow<List<Challenge>> {
-        return challengeDao.getAllChallenges()
-    }
+    fun getActiveChallenges(): Flow<List<Challenge>> = challengeDao.getAllChallenges()
+
+    fun getChallengeById(id: String): Flow<Challenge> = challengeDao.getChallengeById(id)
 }
